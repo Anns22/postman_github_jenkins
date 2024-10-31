@@ -1,0 +1,180 @@
+{
+	"info": {
+		"_postman_id": "2d2e1c96-971d-40c6-aa8c-67bb6cca0eea",
+		"name": "Login",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26515196"
+	},
+	"item": [
+		{
+			"name": "Admin -SignIn",
+			"item": [
+				{
+					"name": "Sign in",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Extract OTP and Token\", function () {\r",
+									"    var jsonData = pm.response.json();\r",
+									"    pm.environment.set(\"Admin_signinOTP\", jsonData.otp);\r",
+									"    pm.environment.set(\"Admin_signinToken\", jsonData.token);\r",
+									"});\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"petcarea54@gmail.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}user/auth/mail-sign-in",
+							"host": [
+								"{{Url}}user"
+							],
+							"path": [
+								"auth",
+								"mail-sign-in"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Signin OTP",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"\r",
+									"\r",
+									" // Parse the response JSON\r",
+									"\r",
+									"const res = pm.response.json();\r",
+									"\r",
+									"if (res.refresh_token) {\r",
+									"\r",
+									"   pm.environment.set('Admin_refresh_token', res.refresh_token);\r",
+									"\r",
+									"    console.log(pm.environment.otp);\r",
+									"\r",
+									"} else {\r",
+									"\r",
+									"    console.error(\"OTP or access token not found in the response.\");\r",
+									"\r",
+									"}\r",
+									"\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"otp\": \"345765\",\r\n    \"token\": \"{{Admin_signinToken}}\",\r\n    \"device_id\": \"e07061c9-acf1-432f-ad82-c065190f1201\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/user/auth/token",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"user",
+								"auth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Refresh Token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// Parse the response JSON\r",
+									"const res = pm.response.json();\r",
+									"\r",
+									"// Check if the response contains the OTP and access token\r",
+									"if (res.access_token && res.refresh_token) {\r",
+									"    // Store OTP and access token in environment variables\r",
+									"    //pm.environment.set('access_token', res.access_token);\r",
+									"    pm.environment.set('Admin_refresh_token1', res.refresh_token);\r",
+									"    console.log(pm.environment.otp);\r",
+									"} else {\r",
+									"    console.error(\"OTP or access token not found in the response.\");\r",
+									"}\r",
+									"\r",
+									"pm.test(\"Status code is 200\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"token\": \"{{Admin_refresh_token}}\",\r\n    \"device_id\": \"e07061c9-acf1-432f-ad82-c065190f1201\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{Url}}/user/auth/refresh_token",
+							"host": [
+								"{{Url}}"
+							],
+							"path": [
+								"user",
+								"auth",
+								"refresh_token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
