@@ -26,8 +26,3 @@ jobs:
       run: flutter build apk --debug
 
 
-    - name: Trigger Jenkins Job
-      if: success()  # Runs only if previous steps were successful
-      run: |
-        curl -X POST "${{ secrets.JENKINS_URL }}/job/${{ secrets.JENKINS_JOB_NAME }}/buildWithParameters?ENVIRONMENT=staging" \
-        --user "${{ secrets.JENKINS_USERNAME }}:${{ secrets.JENKINS_API_TOKEN }}"   
